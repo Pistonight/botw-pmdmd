@@ -1,0 +1,16 @@
+[submodule "exlaunch"]
+	path = switch/libs/exlaunch
+	url = https://github.com/Pistonight/exlaunch
+	branch = dev
+[submodule "nnheaders"]
+	path = switch/libs/nnheaders
+	url = https://github.com/open-ead/nnheaders
+	branch = master
+[submodule "sead"]
+	path = switch/libs/sead
+	url = https://github.com/open-ead/sead
+	branch = master
+[submodule "botw-symbols"]
+	path = switch/libs/botw-symbols
+	url = https://github.com/Pistonight/botw-symbols
+	branch = main

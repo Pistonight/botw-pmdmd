@@ -1,0 +1,63 @@
+[module]
+name = "botwpmdmd"
+title-id = 0x01007ef00011e000
+
+# make configuration
+[make]
+entry = "exl_module_init"
+
+sources = [
+    "src",
+    "libs/exlaunch/source"
+]
+includes = [
+    "libs/exlaunch/source",
+    "libs/sead/include",
+    "libs/nnheaders/include",
+]
+defines = [
+    "NNSDK",
+    "EXL_DEBUG",
+    "EXL_USE_FAKEHEAP",
+    "EXL_LOAD_KIND_ENUM=2",
+    "EXL_LOAD_KIND=Module",
+]
+# linker scripts (relative to project root)
+ld-scripts = [
+    "libs/exlaunch/misc/link.ld",
+    "libs/botw-symbols/ld/ld150.ld",
+]
+# extra macros to define. The macros can be a string or a list of strings, which are joined with a space
+extra = [
+    { DEFINES = [
+        "-DEXL_PROGRAM_ID=$(MEGATON_MODULE_TITLE_ID)",
+        "-DEXL_MODULE_NAME='\"$(MEGATON_MODULE_NAME)\"'"
+    ]},
+]
+
+[check]
+ignore = [
+    ".data",
+    ".text",
+    # "sys_abort",
+    # "sys_futex_wake",
+    # "sys_futex_wait",
+    # "sys_write",
+]
+symbols = [
+    "libs/botw-symbols/symbols/150/main.syms",
+    "libs/botw-symbols/symbols/150/rtld.syms",
+    "libs/botw-symbols/symbols/150/sdk.syms",
+    "libs/botw-symbols/symbols/150/subsdk0.syms",
+]
+disallowed-instructions = [
+    '^msr\s*spsel',
+    '^msr\s*daifset',
+    '^mrs\.*daif',
+    '^mrs\.*tpidr_el1',
+    '^msr\s*tpidr_el1',
+    '^hlt',
+    # "^msr",
+    # "^mrs"
+]
+
