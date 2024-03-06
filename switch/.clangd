@@ -1,0 +1,5 @@
+CompileFlags:
+  Compiler: /usr/bin/g++
+  CompilationDatabase: ./target/megaton/none/make
+  Remove: [ -march=*, -mtune=*, -mtp=* ]
+

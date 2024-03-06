@@ -1,16 +1,15 @@
 #include <exl/lib.hpp>
-/* #include <util/utilVersion.hpp> */
-/* #include <module/modModuleCookSpy.hpp> */
 #include <gfx/seadTextWriter.h>
-/* #include <server/svrServer.hpp> */
-#include "screen.h"
 
-namespace uks::screen {
+#include "screen.hpp"
+#include "server.hpp"
+
+namespace botw::pmdmd {
 
 namespace inst = exl::armv8::inst;
 namespace reg = exl::armv8::reg;
 
-void init() {
+void screen_init() {
     // Patch Screen Rendering (150 only)
 /* #if BOTW_VERSION == 150 */
     // (nnMain) Set debug heap to gfx heap
@@ -22,7 +21,7 @@ void init() {
     // sub_7100C65F5C(sead::TaskBase *a1, __int64 x1_0) some kind of render function
     // Patch it to call our screen compute and render
     patcher.Seek(0x00C661EC);
-    patcher.BranchLinkInst(reinterpret_cast<void*>(update));
+    patcher.BranchLinkInst(reinterpret_cast<void*>(screen_update));
 
     // Raw instructions that aren't supported by exlaunch yet
     constexpr u32 Inst_FMOV_S8_1_0 = 0x1E2E1008;
@@ -50,7 +49,7 @@ void init() {
     patcher.WriteInst(Inst_FADD_S10_S0_S9); // FADD S10, S0, S9
 
     patcher.Seek(0x00C66300);
-    patcher.BranchLinkInst(reinterpret_cast<void*>(render));
+    patcher.BranchLinkInst(reinterpret_cast<void*>(screen_render));
     patcher.Seek(0x00C66308);
     patcher.WriteInst(Inst_FADD_S12_S10_S8); // FADD S12, S10, S8 
     patcher.WriteInst(inst::Nop());
@@ -65,7 +64,7 @@ void init() {
 
     // Draw Top
     patcher.Seek(0x00C66344);
-    patcher.BranchLinkInst(reinterpret_cast<void*>(render));
+    patcher.BranchLinkInst(reinterpret_cast<void*>(screen_render));
     patcher.WriteInst(Inst_FMOV_S10_0);  // FMOV S10, #0.0
     patcher.WriteInst(Inst_FMOV_S0_S11); // FMOV S0,  S11
     patcher.Seek(0x00C66374);
@@ -76,7 +75,7 @@ void init() {
     patcher.WriteInst(Inst_FMOV_S12_S1);    // FMOV S12, S1
     patcher.WriteInst(Inst_FADD_S11_S0_S8); // FADD S11, S0, S8
     patcher.Seek(0x00C663C8);
-    patcher.BranchLinkInst(reinterpret_cast<void*>(render));
+    patcher.BranchLinkInst(reinterpret_cast<void*>(screen_render));
     patcher.Seek(0x00C663D0);
     patcher.WriteInst(inst::Nop());
     patcher.Seek(0x00C663D8);
@@ -90,7 +89,7 @@ void init() {
 
     // Draw Right
     patcher.Seek(0x00C6640C);
-    patcher.BranchLinkInst(reinterpret_cast<void*>(render));
+    patcher.BranchLinkInst(reinterpret_cast<void*>(screen_render));
     patcher.Seek(0x00C66440);
     patcher.WriteInst(inst::Nop());
 
@@ -99,7 +98,7 @@ void init() {
     patcher.WriteInst(Inst_FADD_S12_S1_S8); // FADD S12, S1, S8
     patcher.WriteInst(Inst_FMOV_S11_S0);    // FMOV S11, S0
     patcher.Seek(0x00C66498);
-    patcher.BranchLinkInst(reinterpret_cast<void*>(render));
+    patcher.BranchLinkInst(reinterpret_cast<void*>(screen_render));
     patcher.Seek(0x00C664A0);
     patcher.WriteInst(inst::Nop());
     patcher.Seek(0x00C664AC);
@@ -116,7 +115,7 @@ void init() {
 
     // Draw Bottom
     patcher.Seek(0x00C664E8);
-    patcher.BranchLinkInst(reinterpret_cast<void*>(render));
+    patcher.BranchLinkInst(reinterpret_cast<void*>(screen_render));
     patcher.WriteInst(Inst_FADD_S11_S11_S9);   // FADD S11, S11, S9
     patcher.Seek(0x00C6650C);
     patcher.WriteInst(Inst_STR_S12__SP_45C_);  // STR  S12, [SP, #0x45C]
@@ -124,7 +123,7 @@ void init() {
     // Draw Bottom Left
     patcher.Seek(0x00C6651C);
     patcher.WriteInst(inst::AddImmediate(reg::X0, reg::SP, 0x430)); 
-    patcher.BranchLinkInst(reinterpret_cast<void*>(render));
+    patcher.BranchLinkInst(reinterpret_cast<void*>(screen_render));
     patcher.WriteInst(inst::Nop());
     patcher.WriteInst(inst::Nop());
     
@@ -133,28 +132,22 @@ void init() {
     patcher.Seek(0x00C66534);
     patcher.WriteInst(Inst_FADD_S11_S12_S9);  // FADD S11, S12, S9
     patcher.Seek(0x00C6656C);
-    patcher.BranchLinkInst(reinterpret_cast<void*>(render));
+    patcher.BranchLinkInst(reinterpret_cast<void*>(screen_render));
 
     // Draw Middle
     patcher.WriteInst(Inst_FADD_S0_S10_S8); // FADD S0,  S10, S8 
     patcher.WriteInst(Inst_FMOV_S1_S11);    // FMOV S1,  S11 
     patcher.Seek(0x00C665B8);
-    patcher.BranchLinkInst(reinterpret_cast<void*>(render));
+    patcher.BranchLinkInst(reinterpret_cast<void*>(screen_render));
 
 /* #endif */
 
 }
-void update() {
-
+void screen_update() {
+    server_ready_to_init();
 }
-void render(sead::TextWriter* p_text_writer) {
-    /* int a = add_one(41); */
-
-    p_text_writer->printf("(%d)\n", 42);
-    /* mod::CookSpyData& data = mod::GetCookSpyData(); */
-    /* p_text_writer->printf("  last rng roll: %d\n", data.mRngRoll); */
-    /* p_text_writer->printf("  last crit chance: %d\n", data.mCritChance); */
-    /* p_text_writer->printf("  last crit?: %s\n", data.mIsCrit ? "true" : "false"); */
+void screen_render(sead::TextWriter* text_writer) {
+    text_writer->printf("%d\n", server_debug_status());
 }
 }
 

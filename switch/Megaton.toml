@@ -17,8 +17,10 @@ includes = [
 ]
 defines = [
     "NNSDK",
+    "SWITCH",
+    "__SWITCH__",
     "EXL_DEBUG",
-    "EXL_USE_FAKEHEAP",
+    # "EXL_USE_FAKEHEAP",
     "EXL_LOAD_KIND_ENUM=2",
     "EXL_LOAD_KIND=Module",
 ]
@@ -26,6 +28,7 @@ defines = [
 ld-scripts = [
     "libs/exlaunch/misc/link.ld",
     "libs/botw-symbols/ld/ld150.ld",
+    "link150.ld",
 ]
 # extra macros to define. The macros can be a string or a list of strings, which are joined with a space
 extra = [
@@ -39,6 +42,8 @@ extra = [
 ignore = [
     ".data",
     ".text",
+    "fake_heap_start",
+    "fake_heap_end",
     # "sys_abort",
     # "sys_futex_wake",
     # "sys_futex_wait",

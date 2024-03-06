@@ -1,13 +1,19 @@
 #include <exl/lib.hpp>
 #include <nn/fs.h>
-#include "screen.h"
+
+#include "screen.hpp"
+#include "server.hpp"
+#include "worker.hpp"
 
 extern "C" void exl_main(void* x0, void* x1) {
     /* megaton_module_init(); */
     exl::hook::Initialize();
-    uks::screen::init();
 
-    nn::fs::MountSdCardForDebug("sd");
+    /* nn::fs::MountSdCardForDebug("sd"); */
+
+    botw::pmdmd::server_patch();
+    botw::pmdmd::screen_init();
+    botw::pmdmd::start_worker_thread();
 }
 
 /* constexpr const char* MEGATON_PANIC_FILE = "sd:/megaton-panic.txt"; */
