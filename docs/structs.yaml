@@ -1,0 +1,120 @@
+PauseMenuDataMgr:
+  size: 0x44808
+  fields:
+    - vfptr: Int64
+    - Disposer: SeadDisposer
+    - CriticalSection: SeadCriticalSection
+    - InventoryItemList: [SeadOffsetList, PouchItem]
+    - UnusedItemStack: [SeadOffsetList, PouchItem]
+    - ItemPool: [StructArray, 420, PouchItem]
+    - ListHeads: [StructArray, 7, [Ptr, [Ptr, PouchItem]]]
+    - Tabs: [StructArray, 50, [Ptr, PouchItem]]
+    - TabsType: [StructArray, 50, Int32]
+    - LastAddedItem: [Ptr, PouchItem]
+    - LastAddedItemTab: Int32
+    - LastAddedItemSlot: Int32
+    - NumTabs: Int32
+    - pad: [ByteArray, 0x4]
+    - HoldingItems: [StructArray, 5, HoldingItem]
+    - Item_Unknown1: [Ptr, PouchItem]
+    - Unknown2: Int32
+    - Unknown3: Int32
+    - Unknown4: Int32
+    - Unknown5: Int32
+    - Unknown6: Int32
+    - Unknown7: Int32
+    - Unknown8: Int32
+    - Unknown9: Int32
+    - ItemRitoSoul: [Ptr, PouchItem]
+    - ItemGoronSoul: [Ptr, PouchItem]
+    - ItemZoraSoul: [Ptr, PouchItem]
+    - ItemGerudoSoul: [Ptr, PouchItem]
+    - CanSeeHealthBar: Int8
+    - pad: [ByteArray, 0x7]
+    - NewlyAddedItem: PouchItem
+    - IsPouchForQuest: Int8
+    - pad: [ByteArray, 0x7]
+    - EquippedItems: [StructArray, 4, [Ptr, PouchItem]]
+    - CategoryToSort: Int32
+    - pad: [ByteArray, 0x4]
+
+
+HoldingItem:
+  size: 0x10
+  fields:
+  - Item: [Ptr, PouchItem]
+  - Unknown1: Int32
+  - Unknown2: Int32
+
+PouchItem:
+  size: 0x298
+  custom-init:
+  - "this.pos = (off - 0x98) / 0x298;"
+  fields:
+  - vfptr: Int64
+  - Prev: PouchItemOffsetPtr
+  - Next: PouchItemOffsetPtr
+  - Type: Int32
+  - ItemUse: Int32
+  - Value: Int32
+  - Equipped: Int8
+  - InInventory: Int8
+  - pad: [ByteArray, 0x2]
+  - Name: [SeadFixedSafeString, 0x40]
+  - Data: PouchItemData
+  - Ingredients: PouchItemIngredients
+
+PouchItemData: [PouchItemDataCook, PouchItemDataWeapon]
+
+PouchItemDataCook:
+  fields:
+  - Value: Int32
+  - Unknown1: Int32
+  - Price: Int32
+  - Unknown3: Int32
+  - Unknown4: Int32
+
+PouchItemDataWeapon:
+  fields:
+  - Value: Int32
+  - Unknown1: Int32
+  - Modifier: Int32
+  - Unknown3: Int32
+  - Unknown4: Int32
+
+PouchItemIngredients:
+  fields:
+  - data: [ByteArray, 0x208]
+
+
+
+SeadDisposer:
+  fields:
+  - data: [ByteArray, 0x20]
+
+SeadCriticalSection:
+  fields:
+  - data: [ByteArray, 0x40]
+
+SeadFixedSafeString:
+  digits: 2
+  params:
+  - len
+  fields:
+  - vfptr: Int64
+  - StringTop: ByteString
+  - BufferSize: Int32
+  - Buffer: [ByteArray, this.len]
+
+SeadOffsetList:
+  size: 24
+  params:
+  - TNode
+  fields:
+  - HeadPrev: PouchItemOffsetPtr
+  - HeadNext: PouchItemOffsetPtr
+  - Count: Int32
+  - Offset: Int32
+
+_external:
+  PouchItemOffsetPtr: 8

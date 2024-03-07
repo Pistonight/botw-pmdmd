@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+    <head>
+        <title>botw-pmdmd</title>
+    </head>
+    <body>
+        <h1>botw-pmdmd</h1>
+        Steps:
+        <ol>
+            <li>Start the game with the botw-pmdmd mod installed.</li>
+            <li>Make sure the relay script is running</li>
+            <li>Enter the IP of the console and the port of the relay script</li>
+            <li>Click "Dump from console".</li>
+        </ol>
+        <div>
+            <label forId="console-ip" >Console IP</label>
+            <input type="text" id="console-ip" placeholder="xxx.xxx.xxx.xxx"/>
+        </div>
+        <div>
+            <label forId="console-port" >Console Port</label>
+            <input type="text" id="console-port" value="5001" disabled/>
+        </div>
+        <div>
+            <label forId="relay-port" >Relay Port</label>
+            <input type="text" id="relay-port"/>
+        </div>
+        <div>
+            <button id="dump-button">Dump from console</button>
+            <input id="import-button" type="file" />
+            <button id="save-button">Save dump</button>
+        </div>
+        <script src="main.js"> </script>
+        <script src="structs.js"> </script>
+<script src="https://raw.githubusercontent.com/eligrey/FileSaver.js/master/src/FileSaver.js"></script>
+
+    </body>
+</html>
+
