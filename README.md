@@ -13,7 +13,8 @@ on the top-left corner of the screen after the game is done booting.
 
 On your PC, download `relay.py` from the release page.
 (You need to have python installed).
-Run the script with `python relay.py`
+Run the script with `python relay.py`.
+You may need to install `websockets` with `pip install websockets`
 
 Lastly, go to https://pistonight.github.io/botw-pmdmd/
 and enter the IP of your switch on the local network
