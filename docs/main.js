@@ -2,11 +2,17 @@ console.log("botw-pmdmd");
 const inputConsoleIp = document.getElementById("console-ip");
 const inputConsolePort = document.getElementById("console-port");
 const inputRelayPort = document.getElementById("relay-port");
-const inputDumpName = document.getElementById("export-name");
 
 const buttonDump = document.getElementById("dump-button");
 const buttonImport = document.getElementById("import-button");
+const buttonSave = document.getElementById("save-button");
 
+loadInputs();
+
+let ws;
+
+/// the raw dump (including the pmdm* in the first 8 bytes)
+let rawDump;
 /// the dump
 let dump;
 /// pmdm*
@@ -21,12 +27,81 @@ buttonImport.addEventListener("change", async () => {
     buffer = await file.arrayBuffer();
     loadDump(buffer);
 });
+buttonSave.addEventListener("click", () => {
+    if (!rawDump) {
+        console.error("No dump loaded");
+        return;
+    }
+    saveAs(new Blob([rawDump]), "pmdm-dump.bin");
+});
+buttonDump.addEventListener("click", async () => {
+    if (!ws) {
+        console.log("connecting to relay");
+        return await new Promise((resolve, reject) => {
+            ws = new WebSocket(`ws://localhost:${inputRelayPort.value}`);
+            ws.addEventListener("open", () => {
+                console.log("connected to relay");
+                dumpFromConsole();
+                resolve();
+            });
+            ws.addEventListener("error", (event) => {
+                console.error("error connecting to relay");
+                console.error(event);
+            });
+            ws.addEventListener("close", (event) => {
+                console.log("disconnected from relay");
+                ws = null;
+            });
+            ws.addEventListener("message", async (event) => {
+                console.log("received dump from console");
+                const blob = event.data;
+                loadDump(await blob.arrayBuffer());
+            });
+        });
+    }
+    dumpFromConsole();
+});
+inputConsoleIp.addEventListener("change", saveInputs);
+inputConsolePort.addEventListener("change", saveInputs);
+inputRelayPort.addEventListener("change", saveInputs);
+
+function dumpFromConsole() {
+    console.log("requesting dump from console");
+    const port = Number(inputConsolePort.value);
+    if (Number.isNaN(port)) {
+        console.error("invalid port");
+        return;
+    }
+    const payload = {
+        ip: inputConsoleIp.value,
+        port,
+    };
+    ws.send(JSON.stringify(payload));
+}
+
+function saveInputs() {
+    const payload = {
+        ip: inputConsoleIp.value,
+        relayPort: inputRelayPort.value,
+    };
+    localStorage.setItem("botw-pmdmd", JSON.stringify(payload));
+}
+
+function loadInputs() {
+    let payload = localStorage.getItem("botw-pmdmd");
+    if (payload) {
+        payload = JSON.parse(payload);
+        inputConsoleIp.value = payload.ip;
+        inputRelayPort.value = payload.relayPort;
+    }
+}
 
 function loadDump(buffer) {
-    dump = new Uint8Array(buffer);
+    rawDump = new Uint8Array(buffer);
+    dump = rawDump;
     start = read_u64(0);
     console.log("loaded pmdm_ptr="+toHex(start, 16, "0x"));
-    dump = dump.subarray(8);
+    dump = rawDump.subarray(8);
     console.log("loaded dump, length="+dump.length);
     pmdm = new PauseMenuDataMgr(0);
     console.log(pmdm);
