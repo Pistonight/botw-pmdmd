@@ -4,12 +4,12 @@ PauseMenuDataMgr debugging/logging tool for BOTW
 **experimental quality**
 
 ## Setup
-On the switch, you need to have BOTW 1.5.0.
-Download `main.npdm` and `subsdk9` from the release page
+Download `main.npdm` and `subsdk9` from the release page (`subsdk9_160` for 1.6.0, rename it to `subsdk9`)
 and put them in `/atmosphere/contents/01007EF00011E000/exefs`
 
-Boot the game, if things work, you should see the number `9`
+Boot the game. For 1.5.0, if things work, you should see the number `9`
 on the top-left corner of the screen after the game is done booting.
+For 1.6.0 there's no indicator.
 
 On your PC, download `relay.py` from the release page.
 (You need to have python installed).
