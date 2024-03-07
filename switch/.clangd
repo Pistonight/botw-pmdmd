@@ -1,5 +1,5 @@
 CompileFlags:
   Compiler: /usr/bin/g++
-  CompilationDatabase: ./target/megaton/none/make
+  CompilationDatabase: ./target/megaton/v160/make
   Remove: [ -march=*, -mtune=*, -mtp=* ]
 

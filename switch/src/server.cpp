@@ -38,11 +38,14 @@ s32 server_debug_status() {
 }
 
 void server_patch() {
+
+#ifdef BOTW_V150
     // Don't initialize PosTrackerUploader
     exl::patch::CodePatcher patcher { 0x00a8d070 };
     for (int i = 0; i < 23; i ++) {
         patcher.WriteInst(inst::Nop());
     }
+#endif
 }
 
 void Server::start(u16 port) {
@@ -131,7 +134,7 @@ void Server::send_dump() {
     PmdmDump dump;
     dump.dump();
     {
-        sead::ScopedLock<sead::CriticalSection> lock(&send_cs);
+        sead::ScopedLock<CriticalSection> lock(&send_cs);
         u8* data = reinterpret_cast<u8*>(&dump);
         size_t remaining = sizeof(PmdmDump);
         while (remaining > 0) {

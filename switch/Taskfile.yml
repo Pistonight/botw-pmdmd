@@ -5,10 +5,17 @@ env:
 dotenv: [".env"]
 
 tasks:
-  upload:
-    desc: Upload build to console via FTP ( -- <ADDRESS>)
+  upload-150:
+    aliases: [u5]
+    desc: Upload build to console via FTP
     cmds:
-    - lftp $CONSOLE_ADDR < scripts/lftp-upload.sh
+    - lftp $CONSOLE_ADDR < scripts/lftp-upload-v150.sh
+
+  upload-160:
+    aliases: [u6]
+    desc: Upload build to console via FTP
+    cmds:
+    - lftp $CONSOLE_ADDR < scripts/lftp-upload-v160.sh
 
   download:
     desc: Download logs and data from console ( -- <ADDRESS>)

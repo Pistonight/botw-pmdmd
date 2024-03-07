@@ -11,7 +11,7 @@ namespace reg = exl::armv8::reg;
 
 void screen_init() {
     // Patch Screen Rendering (150 only)
-/* #if BOTW_VERSION == 150 */
+#ifdef BOTW_V150
     // (nnMain) Set debug heap to gfx heap
     exl::patch::CodePatcher patcher { 0x007d6238 };
     patcher.WriteInst(inst::MovRegister(reg::X22, reg::X21));
@@ -140,14 +140,16 @@ void screen_init() {
     patcher.Seek(0x00C665B8);
     patcher.BranchLinkInst(reinterpret_cast<void*>(screen_render));
 
-/* #endif */
+#endif
 
 }
 void screen_update() {
     server_ready_to_init();
 }
 void screen_render(sead::TextWriter* text_writer) {
+#ifdef BOTW_V150
     text_writer->printf("%d\n", server_debug_status());
+#endif
 }
 }
 

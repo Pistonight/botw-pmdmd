@@ -1,10 +1,8 @@
 #pragma once
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Winvalid-offsetof"
-#include <thread/seadCriticalSection.h>
-#pragma GCC diagnostic pop
 #include <exl/types.h>
+
+#include "critical_section.hpp"
 
 namespace botw::pmdmd {
 
@@ -28,7 +26,7 @@ private:
     s32 server_socket = -1;
     s32 client_socket = -1;
 
-    sead::CriticalSection send_cs;
+    CriticalSection send_cs;
 };
 
 Server* server_instance();

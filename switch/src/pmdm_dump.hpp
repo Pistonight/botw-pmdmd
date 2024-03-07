@@ -5,7 +5,7 @@ namespace botw::pmdmd {
 
 extern u8* pmdm_instance;
 
-/// Size of PMDM in 1.5.0
+/// Size of PMDM, same in 1.5.0 and 1.6.0
 constexpr u32 PMDM_SIZE = 0x44808;
 
 /// Packet to send

@@ -27,8 +27,6 @@ defines = [
 # linker scripts (relative to project root)
 ld-scripts = [
     "libs/exlaunch/misc/link.ld",
-    "libs/botw-symbols/ld/ld150.ld",
-    "link150.ld",
 ]
 # extra macros to define. The macros can be a string or a list of strings, which are joined with a space
 extra = [
@@ -38,22 +36,66 @@ extra = [
     ]},
 ]
 
+[make.profiles.v150] # flags for the 1.5.0 profile
+defines = [
+    "BOTW_V150",
+    "NN_SDK_MAJOR=4",
+    "NN_SDK_MINOR=4",
+    "NN_SDK_PATCH=0",
+    "NN_WARE_MAJOR=4",
+    "NN_WARE_MINOR=4",
+    "NN_WARE_PATCH=0",
+]
+ld-scripts = [
+    "libs/botw-symbols/ld/ld150.ld",
+    "link150.ld",
+]
+
+[make.profiles.v160] # flags for the 1.6.0 profile
+# sources = [
+#     "libs/sead/modules/src/thread/nin",
+# ]
+defines = [
+    "BOTW_V160",
+    "NN_SDK_MAJOR=7",
+    "NN_SDK_MINOR=3",
+    "NN_SDK_PATCH=2",
+    "NN_WARE_MAJOR=7",
+    "NN_WARE_MINOR=3",
+    "NN_WARE_PATCH=2",
+]
+ld-scripts = [
+    # "libs/botw-symbols/ld/ld160.ld",
+    "link160.ld",
+]
+# extra = [
+#     # workaround, megaton can't target specific files yet
+#     { VPATH = [
+#         "$(VPATH)",
+#         "$(MEGATON_ROOT)libs/sead/modules/src/heap",
+#     ]},
+#     { CPPFILES = [
+#         "$(CPPFILES)",
+#         "seadHeap.cpp",
+#         "seadDisposer.cpp",
+#         "seadHeapMgr.cpp",
+#     ]},
+#     { CXXFLAGS = [
+#         "-Wno-invalid-offsetof",
+#         "-Wno-strict-aliasing",
+#     ]}
+# ]
+
 [check]
 ignore = [
     ".data",
     ".text",
-    "fake_heap_start",
-    "fake_heap_end",
+    # "fake_heap_start",
+    # "fake_heap_end",
     # "sys_abort",
     # "sys_futex_wake",
     # "sys_futex_wait",
     # "sys_write",
-]
-symbols = [
-    "libs/botw-symbols/symbols/150/main.syms",
-    "libs/botw-symbols/symbols/150/rtld.syms",
-    "libs/botw-symbols/symbols/150/sdk.syms",
-    "libs/botw-symbols/symbols/150/subsdk0.syms",
 ]
 disallowed-instructions = [
     '^msr\s*spsel',
@@ -64,5 +106,21 @@ disallowed-instructions = [
     '^hlt',
     # "^msr",
     # "^mrs"
+]
+
+[check.profiles.v150]
+symbols = [
+    "libs/botw-symbols/symbols/150/main.syms",
+    "libs/botw-symbols/symbols/150/rtld.syms",
+    "libs/botw-symbols/symbols/150/sdk.syms",
+    "libs/botw-symbols/symbols/150/subsdk0.syms",
+]
+
+[check.profiles.v160]
+symbols = [
+    "libs/botw-symbols/symbols/160/main.syms",
+    "libs/botw-symbols/symbols/160/rtld.syms",
+    "libs/botw-symbols/symbols/160/sdk.syms",
+    "libs/botw-symbols/symbols/160/subsdk0.syms",
 ]
 
