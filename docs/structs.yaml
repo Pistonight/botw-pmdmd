@@ -73,7 +73,7 @@ PouchItemDataCook:
   - EffectLength: Int32
   - SellPrice: Int32
   - Effect: Float32
-  - Unknown1: Int32
+  - EffectLevel: Float32
 
 PouchItemDataWeapon:
   fields:

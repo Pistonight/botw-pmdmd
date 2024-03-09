@@ -144,7 +144,7 @@ class PouchItemDataCook {
         offset += 4;
         this[`${toHex(offset, 2, "x")}_Effect`] = newFloat32(off+offset);
         offset += 4;
-        this[`${toHex(offset, 2, "x")}_Unknown1`] = newInt32(off+offset);
+        this[`${toHex(offset, 2, "x")}_EffectLevel`] = newFloat32(off+offset);
         offset += 4;
     }
 }

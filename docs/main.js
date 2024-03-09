@@ -133,7 +133,7 @@ function read_f32(offset) {
     buffer[1] = dump[offset+1];
     buffer[2] = dump[offset+2];
     buffer[3] = dump[offset+3];
-    const floatView = new Float32Array(buffer);
+    const floatView = new Float32Array(buffer.buffer);
     return floatView[0];
 }
 
