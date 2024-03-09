@@ -127,6 +127,16 @@ function read_u32(offset) {
     return BigInt("0x"+highHex+lowHex);
 }
 
+function read_f32(offset) {
+    const buffer = new Uint8Array(new ArrayBuffer(4));
+    buffer[0] = dump[offset];
+    buffer[1] = dump[offset+1];
+    buffer[2] = dump[offset+2];
+    buffer[3] = dump[offset+3];
+    const floatView = new Float32Array(buffer);
+    return floatView[0];
+}
+
 function read_u64(offset) {
     const lowHex = toHex(read_u32(offset), 8);
     const highHex = toHex(read_u32(offset+4), 8);
@@ -152,6 +162,13 @@ class Int32 {
         }
         return u32;
     }
+}
+
+function newFloat32(off) { return new Float32(off); }
+class Float32 {
+    constructor(off) { this.off = off; }
+    get f32() { return Number(read_f32(this.off)); }
+    get hex() { return toHex(read_u32(this.off), 8, "0x"); }
 }
 
 function newInt16(off) { return new Int16(off); }

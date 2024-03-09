@@ -113,12 +113,14 @@ class PouchItem {
         offset += 1;
         this[`${toHex(offset, 3, "x")}_pad`] = newByteArray(off+offset, 2);
         offset += 2;
-        this[`${toHex(offset, 3, "x")}_Name`] = newSeadFixedSafeString(off+offset, 64);
-        offset += sizeofSeadFixedSafeString(64);
+        this[`${toHex(offset, 3, "x")}_Name`] = newSeadFixedSafeString40(off+offset);
+        offset += 88;
         this[`${toHex(offset, 3, "x")}_Data`] = newPouchItemData(off+offset);
         offset += 20;
+        this[`${toHex(offset, 3, "x")}_pad`] = newByteArray(off+offset, 4);
+        offset += 4;
         this[`${toHex(offset, 3, "x")}_Ingredients`] = newPouchItemIngredients(off+offset);
-        offset += 520;
+        offset += 512;
         this.pos = (off - 0x98) / 0x298;
     }
 }
@@ -134,15 +136,15 @@ class PouchItemDataCook {
     constructor(off) {
         this.off = off;
         let offset = 0;
-        this[`${toHex(offset, 2, "x")}_Value`] = newInt32(off+offset);
+        this[`${toHex(offset, 2, "x")}_HealthRecovery`] = newInt32(off+offset);
+        offset += 4;
+        this[`${toHex(offset, 2, "x")}_EffectLength`] = newInt32(off+offset);
+        offset += 4;
+        this[`${toHex(offset, 2, "x")}_SellPrice`] = newInt32(off+offset);
+        offset += 4;
+        this[`${toHex(offset, 2, "x")}_Effect`] = newFloat32(off+offset);
         offset += 4;
         this[`${toHex(offset, 2, "x")}_Unknown1`] = newInt32(off+offset);
-        offset += 4;
-        this[`${toHex(offset, 2, "x")}_Price`] = newInt32(off+offset);
-        offset += 4;
-        this[`${toHex(offset, 2, "x")}_Unknown3`] = newInt32(off+offset);
-        offset += 4;
-        this[`${toHex(offset, 2, "x")}_Unknown4`] = newInt32(off+offset);
         offset += 4;
     }
 }
@@ -151,15 +153,15 @@ class PouchItemDataWeapon {
     constructor(off) {
         this.off = off;
         let offset = 0;
-        this[`${toHex(offset, 2, "x")}_Value`] = newInt32(off+offset);
+        this[`${toHex(offset, 2, "x")}_ModifierValue`] = newInt32(off+offset);
         offset += 4;
         this[`${toHex(offset, 2, "x")}_Unknown1`] = newInt32(off+offset);
         offset += 4;
         this[`${toHex(offset, 2, "x")}_Modifier`] = newInt32(off+offset);
         offset += 4;
-        this[`${toHex(offset, 2, "x")}_Unknown3`] = newInt32(off+offset);
+        this[`${toHex(offset, 2, "x")}_Unknown2`] = newFloat32(off+offset);
         offset += 4;
-        this[`${toHex(offset, 2, "x")}_Unknown4`] = newInt32(off+offset);
+        this[`${toHex(offset, 2, "x")}_Unknown3`] = newInt32(off+offset);
         offset += 4;
     }
 }
@@ -168,8 +170,8 @@ class PouchItemIngredients {
     constructor(off) {
         this.off = off;
         let offset = 0;
-        this[`${toHex(offset, 2, "x")}_data`] = newByteArray(off+offset, 520);
-        offset += 520;
+        this[`${toHex(offset, 2, "x")}_data`] = newByteArray(off+offset, 512);
+        offset += 512;
     }
 }
 function newSeadDisposer(off, ...args) { return new SeadDisposer(off, ...args); }
@@ -190,11 +192,10 @@ class SeadCriticalSection {
         offset += 64;
     }
 }
-function newSeadFixedSafeString(off, ...args) { return new SeadFixedSafeString(off, ...args); }
-class SeadFixedSafeString {
-    constructor(off, len) {
+function newSeadFixedSafeString40(off, ...args) { return new SeadFixedSafeString40(off, ...args); }
+class SeadFixedSafeString40 {
+    constructor(off) {
         this.off = off;
-        this.len = len;
         let offset = 0;
         this[`${toHex(offset, 2, "x")}_vfptr`] = newInt64(off+offset);
         offset += 8;
@@ -202,15 +203,11 @@ class SeadFixedSafeString {
         offset += 8;
         this[`${toHex(offset, 2, "x")}_BufferSize`] = newInt32(off+offset);
         offset += 4;
-        this[`${toHex(offset, 2, "x")}_Buffer`] = newByteArray(off+offset, this.len);
-        offset += this.len;
+        this[`${toHex(offset, 2, "x")}_Buffer`] = newByteArray(off+offset, 64);
+        offset += 64;
+        this[`${toHex(offset, 2, "x")}_pad`] = newByteArray(off+offset, 4);
+        offset += 4;
     }
-    sizeof() {
-        return 20 + this.len;
-    }
-}
-function sizeofSeadFixedSafeString(len) {
-    return newSeadFixedSafeString(0, len).sizeof();
 }
 function newSeadOffsetList(off, ...args) { return new SeadOffsetList(off, ...args); }
 class SeadOffsetList {

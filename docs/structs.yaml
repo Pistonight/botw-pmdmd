@@ -60,31 +60,32 @@ PouchItem:
   - Equipped: Int8
   - InInventory: Int8
   - pad: [ByteArray, 0x2]
-  - Name: [SeadFixedSafeString, 0x40]
+  - Name: SeadFixedSafeString40
   - Data: PouchItemData
+  - pad: [ByteArray, 0x4]
   - Ingredients: PouchItemIngredients
 
 PouchItemData: [PouchItemDataCook, PouchItemDataWeapon]
 
 PouchItemDataCook:
   fields:
-  - Value: Int32
+  - HealthRecovery: Int32
+  - EffectLength: Int32
+  - SellPrice: Int32
+  - Effect: Float32
   - Unknown1: Int32
-  - Price: Int32
-  - Unknown3: Int32
-  - Unknown4: Int32
 
 PouchItemDataWeapon:
   fields:
-  - Value: Int32
+  - ModifierValue: Int32
   - Unknown1: Int32
   - Modifier: Int32
+  - Unknown2: Float32
   - Unknown3: Int32
-  - Unknown4: Int32
 
 PouchItemIngredients:
   fields:
-  - data: [ByteArray, 0x208]
+  - data: [ByteArray, 0x200]
 
 
 
@@ -96,15 +97,14 @@ SeadCriticalSection:
   fields:
   - data: [ByteArray, 0x40]
 
-SeadFixedSafeString:
+SeadFixedSafeString40:
   digits: 2
-  params:
-  - len
   fields:
   - vfptr: Int64
   - StringTop: ByteString
   - BufferSize: Int32
-  - Buffer: [ByteArray, this.len]
+  - Buffer: [ByteArray, 0x40]
+  - pad: [ByteArray, 0x4]
 
 SeadOffsetList:
   size: 24

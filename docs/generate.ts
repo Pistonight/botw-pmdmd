@@ -19,6 +19,7 @@ const SizeTable = {
     "Int8": 1,
     "Int16": 2,
     "Int32": 4,
+    "Float32": 4,
     "Int64": 8,
     "Ptr": 8, // aka void*
     "ByteString": 8, // null-terminated char*
@@ -381,6 +382,8 @@ for (const name in Data) {
         const actualSize = calcSize(name);
         if (expectedSize !== actualSize) {
             throw new Error(`Size mismatch for ${name}. Expected ${expectedSize}, got ${actualSize}`);
+        } else {
+            console.log(`Size of ${name} = 0x${actualSize.toString(16)}`);
         }
     }
 }
