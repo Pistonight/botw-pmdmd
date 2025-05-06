@@ -11,7 +11,7 @@ Boot the game. For 1.5.0, if things work, you should see the number `9`
 on the top-left corner of the screen after the game is done booting.
 For 1.6.0 there's no indicator.
 
-On your PC, download `relay.py` from the release page.
+On your PC, download `relay.py` from the code above.
 (You need to have python installed).
 Run the script with `python relay.py`.
 You may need to install `websockets` with `pip install websockets`
